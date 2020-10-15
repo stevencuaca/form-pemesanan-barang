@@ -23,7 +23,7 @@
             display: none;
         }
         #hideProducts {
-            display: none;
+            //display: none;
         }
     </style>
 </head>
@@ -112,18 +112,18 @@
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputPassword1">Price<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="" id="price">
+                                        <input class="form-control" type="" id="price" disabled>
                                     </div>
                                     <div class="col-6">
                                         <label for="exampleInputPassword1">Total Price<span class="text-danger">*</span></label>
-                                        <input class="form-control" type=""  id="totalPrice">
+                                        <input class="form-control" type="" id="totalPrice" disabled>
                                         <hr />
                                         <div class="row">
                                             <div class="col">
                                                 <p class="font-weight-bold">Total Nett Price<span class="text-danger">*</span></p>
                                             </div>
                                             <div class="col">
-                                                <p class="text-right font-weight-bold">700.000</p>
+                                                <p class="text-right font-weight-bold" id="totalNettPrice">700.000</p>
                                             </div>
                                         </div>
                                     </div>
@@ -262,16 +262,25 @@
 
         }
 
+        // SET TOTAL NETT PRICE    
+        function setTotalNettPrice() {
+            var totalPrice = document.getElementById('totalPrice').value;
+            var element = document.getElementById("totalNettPrice");
+            element.innerHTML = totalPrice;
+        };
+
         // SET TOTAL PRICE    
         $('#quantity').keyup(function () {
             var quantity  = document.getElementById('quantity').value;
             var price = document.getElementById('price').value;
             document.getElementById('totalPrice').value = quantity * price;
+            setTotalNettPrice();
         });
 
 
         populateProductList();
         populateDistributorName();
+        setTotalNettPrice();
         
         
 
