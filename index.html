@@ -23,7 +23,7 @@
             display: none;
         }
         #hideProducts {
-            //display: none;
+            display: none;
         }
     </style>
 </head>
@@ -92,13 +92,13 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <label for="exampleInputPassword1">Product<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="product" onchange="productUnitList(this.options[this.selectedIndex].value)">
+                                        <select class="form-control" id="product" onchange="populateUnitList(this.options[this.selectedIndex].value)">
                                             <option value="" disabled selected>Product Name</option>
                                         </select>
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label>
-                                        <select class="form-control" id="unit">
+                                        <select class="form-control" id="unit" onchange="setPrice(this.options[this.selectedIndex].value)">
                                             <option value="" disabled selected>No Data Avaiable</option>
                                         </select>
                                     </div>
@@ -108,15 +108,15 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="exampleInputPassword1">Quantity<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="number">
+                                        <input class="form-control" type="" id="quantity">
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputPassword1">Price<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="number">
+                                        <input class="form-control" type="" id="price">
                                     </div>
                                     <div class="col-6">
-                                        <label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="number">
+                                        <label for="exampleInputPassword1">Total Price<span class="text-danger">*</span></label>
+                                        <input class="form-control" type=""  id="totalPrice">
                                         <hr />
                                         <div class="row">
                                             <div class="col">
@@ -195,17 +195,17 @@
             [{
                     "id": 1,
                     "product_name": "Morning Dew Milk",
-                    "units": [{"name": "1", "price": "10000"}, {"name": "2", "price": 1000}]
+                    "units": [{"name": "Pak", "price": "10000"}, {"name": "Pcs", "price": 1000}]
             },
             {
                     "id": 2,
                     "product_name": "Le Minerale 600ml",
-                    "units": [{"name": "a", "price": "20000"}, {"name": "b", "price": 1000}]
+                    "units": [{"name": "Dus", "price": "20000"}, {"name": "Pcs", "price": 1000}]
             },
             {
                     "id": 3,
                     "product_name": "Greenfields Full Cream Milk 1L",
-                    "units": [{"name": "Karton", "price": "20000"}, {"name": "Pak", "price": 1000}, {"name": "Pcs", "price": 1000}]
+                    "units": [{"name": "Karton", "price": "18000"}, {"name": "Pak", "price": 1000}, {"name": "Pcs", "price": 1000}]
             }];
 
         function populateProductList() {
@@ -218,7 +218,7 @@
             }
         }
 
-        function productUnitList(selected) {
+        function populateUnitList(selected) {
             //console.log(products[1].units);
             var select = document.getElementById("unit");
             var length = select.options.length;
@@ -230,14 +230,45 @@
                 if (products[i].id == selected) {
                     for (let j = 0; j < products[i].units.length; j++){
                         var x = document.createElement("OPTION");
-                        //x.setAttribute("value", products[i].id);
-                        var t = document.createTextNode(products[i].units[j].name);
+                        var a =  products[i].units[j];
+                        x.setAttribute("value", j);
+                        var t = document.createTextNode(a.name);
                         x.appendChild(t);
                         select.appendChild(x);
                     }
                 }
             }
         }
+
+        function setPrice(selected) {
+            // GET INDEX OF SELECTED  UNIT
+            var unitIndex = selected;
+            
+            // GET PRODUCT ID
+            var selectProduct = document.getElementById("product");
+            var productID = selectProduct.options[selectProduct.selectedIndex].value;
+
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].id == productID) {
+                    for (let j = 0; j < products[i].units.length; j++){
+                        
+                        if (j  == unitIndex) {
+                            var a =  products[i].units[j].price;
+                            document.getElementById("price").value = a;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        // SET TOTAL PRICE    
+        $('#quantity').keyup(function () {
+            var quantity  = document.getElementById('quantity').value;
+            var price = document.getElementById('price').value;
+            document.getElementById('totalPrice').value = quantity * price;
+        });
+
 
         populateProductList();
         populateDistributorName();
