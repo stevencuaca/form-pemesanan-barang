@@ -166,7 +166,28 @@
             })
         };
 
+        function enableDistributionCenter() {
+            var select = document.getElementById('distributionCenter');
+            select.disabled = false;
+            var newOptions = {"Select Distribution Center": "", "DC Tangerang": "DC Tangerang","CD Cikarang": "DC Cikarang"};
 
+            var $el = $("#distributionCenter");
+            $el.empty(); // remove old options
+            $.each(newOptions, function(key,value) {
+            $el.append($("<option></option>")
+                .attr("value", value).text(key));
+            });
+        };
+
+        function show() {
+            $( "#hideDetails" ).slideDown( "slow", function() {
+                // Animation complete.
+            });
+
+            $( "#hideProducts" ).slideDown( "slow", function() {
+                // Animation complete.
+            });
+        }
         
         populateDistributorName();
         
