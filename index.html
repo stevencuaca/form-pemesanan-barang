@@ -23,7 +23,7 @@
             display: none;
         }
         #hideProducts {
-            display: none;
+            //display: none;
         }
     </style>
 </head>
@@ -92,13 +92,13 @@
                                 <div class="row">
                                     <div class="col-8">
                                         <label for="exampleInputPassword1">Product<span class="text-danger">*</span></label>
-                                        <select class="form-control">
-                                            <option>Default select</option>
+                                        <select class="form-control" id="product" onchange="productUnitList(this.options[this.selectedIndex].value)">
+                                            <option value="" disabled selected>Product Name</option>
                                         </select>
                                     </div>
                                     <div class="col">
                                         <label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label>
-                                        <select class="form-control">
+                                        <select class="form-control" id="unit">
                                             <option value="" disabled selected>No Data Avaiable</option>
                                         </select>
                                     </div>
@@ -188,8 +188,60 @@
                 // Animation complete.
             });
         }
-        
+
+
+        // LIST PRODUCT
+        var products =
+            [{
+                    "id": 1,
+                    "product_name": "Morning Dew Milk",
+                    "units": [{"name": "1", "price": "10000"}, {"name": "2", "price": 1000}]
+            },
+            {
+                    "id": 2,
+                    "product_name": "Le Minerale 600ml",
+                    "units": [{"name": "a", "price": "20000"}, {"name": "b", "price": 1000}]
+            },
+            {
+                    "id": 3,
+                    "product_name": "Greenfields Full Cream Milk 1L",
+                    "units": [{"name": "Karton", "price": "20000"}, {"name": "Pak", "price": 1000}, {"name": "Pcs", "price": 1000}]
+            }];
+
+        function populateProductList() {
+            for (let i = 0; i < products.length; i++) {
+                var x = document.createElement("OPTION");
+                x.setAttribute("value", products[i].id);
+                var t = document.createTextNode(products[i].product_name);
+                x.appendChild(t);
+                document.getElementById("product").appendChild(x);
+            }
+        }
+
+        function productUnitList(selected) {
+            //console.log(products[1].units);
+            var select = document.getElementById("unit");
+            var length = select.options.length;
+            for (i = length-1; i >= 0; i--) {
+                select.options[i] = null;
+            }
+
+            for (let i = 0; i < products.length; i++) {
+                if (products[i].id == selected) {
+                    for (let j = 0; j < products[i].units.length; j++){
+                        var x = document.createElement("OPTION");
+                        //x.setAttribute("value", products[i].id);
+                        var t = document.createTextNode(products[i].units[j].name);
+                        x.appendChild(t);
+                        select.appendChild(x);
+                    }
+                }
+            }
+        }
+
+        populateProductList();
         populateDistributorName();
+        
         
 
     </script>
