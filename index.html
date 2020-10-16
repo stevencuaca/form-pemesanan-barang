@@ -32,7 +32,7 @@
         <p class="h5">Create Order</p>
         <div class="card">
             <div class="card-body">
-                <form>
+                <form id="myForm">
                     <!-- Details Section -->
                     <div class="row">
                         <div class="col-3">
@@ -41,21 +41,21 @@
                         <div class="col">
                             <div class="form-group">
                               <label>Name<span class="text-danger">*</span></label>
-                              <select class="form-control name-select col-6" id="distributorName" onchange="enableDistributionCenter()">
+                              <select class="form-control name-select col-6" id="distributorName" onchange="enableDistributionCenter()" required>
                                 <option value="" disabled selected>Select your distributor name</option>
                               </select>
                             </div>
                             <div class="form-group">
-                              <label for="exampleInputPassword1">Distribution Center<span class="text-danger">*</span></label>
-                              <select class="form-control col-5" disabled id="distributionCenter" onchange="show()">
+                              <label>Distribution Center<span class="text-danger">*</span></label>
+                              <select class="form-control col-5" disabled id="distributionCenter" onchange="show()" required>
                                 <option value="" disabled selected>Not Data Avaiable</option>
                               </select>
                             </div>
                             <div class="form-group" id="showDetails">
                                 <div class="row">
                                     <div class="col">
-                                        <label for="exampleInputPassword1">Payment Type<span class="text-danger">*</span></label>
-                                        <select class="form-control">
+                                        <label>Payment Type<span class="text-danger">*</span></label>
+                                        <select class="form-control" required>
                                             <option value="" disabled selected>Select your payment type</option>
                                             <option>Cash H+1</option>
                                             <option>Cash H+3</option>
@@ -66,8 +66,8 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="exampleInputPassword1">Expired Date<span class="text-danger">*</span></label>
-                                        <input class="form-control" type="date" name="" id="">
+                                        <label></label>Expired Date<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="date" name="" id="" required>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -93,14 +93,14 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-8">
-                                                <label for="exampleInputPassword1">Product<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="product1" onchange="populateUnitList(this.options[this.selectedIndex].value)">
+                                                <label>Product<span class="text-danger">*</span></label>
+                                                <select class="form-control" id="product1" onchange="populateUnitList(this.options[this.selectedIndex].value)" required>
                                                     <option value="" disabled selected>Product Name</option>
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="unit1" onchange="setPrice(this.options[this.selectedIndex].value)">
+                                                <label>Unit<span class="text-danger">*</span></label>
+                                                <select class="form-control" id="unit1" onchange="setPrice(this.options[this.selectedIndex].value)" required>
                                                     <option value="" disabled selected>No Data Avaiable</option>
                                                 </select>
                                             </div>
@@ -109,16 +109,16 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="exampleInputPassword1">Quantity<span class="text-danger">*</span></label>
-                                                <input class="form-control" type="" id="quantity1" onkeyup="calculateTotalPrice()">
+                                                <label>Quantity<span class="text-danger">*</span></label>
+                                                <input class="form-control" type="" id="quantity1" onkeyup="calculateTotalPrice()" required>
                                             </div>
                                             <div class="col">
-                                                <label for="exampleInputPassword1">Price<span class="text-danger">*</span></label>
-                                                <input class="form-control" type="" id="price1" disabled>
+                                                <label>Price<span class="text-danger">*</span></label>
+                                                <input class="form-control" type="" id="price1" disabled required>
                                             </div>
                                             <div class="col-6">
-                                                <label for="exampleInputPassword1">Total Price<span class="text-danger">*</span></label>
-                                                <input class="form-control" type="" id="totalPrice1" disabled>
+                                                <label>Total Price<span class="text-danger">*</span></label>
+                                                <input class="form-control" type="" id="totalPrice1" disabled required>
                                                 <hr />
                                                 <div class="row">
                                                     <div class="col">
@@ -142,10 +142,10 @@
 
                                 </div>
                                 <div class="col">
-                                    <p class="font-weight-bold">Total</p>
+                                    <p class="font-weight-bold text-right">Total</p>
                                 </div>
                                 <div class="col">
-                                    <p class="font-weight-bold" id="globalTotal"></p>
+                                    <p class="font-weight-bold text-right" id="globalTotal"></p>
                                 </div>
                             </div>
                         </div>
@@ -154,8 +154,8 @@
                     <hr />
 
                     <div class="text-right">
-                        <button class="btn" disabled>Cancel</button>
-                        <button class="btn btn-success" disabled>Confirm</button>
+                        <button class="btn">Cancel</button>
+                        <button class="btn btn-success" id="confirm" disabled>Confirm</button>
                     </div>
                 </form>
             </div>
@@ -211,7 +211,7 @@
                 // Animation complete.
             });
         }
-
+        
 
         // LIST PRODUCT
         var products =
@@ -299,6 +299,13 @@
             var element = document.getElementById(totalNettPriceHTMLID);
 
             element.innerHTML = totalPrice;
+
+            if(totalPrice == 0){
+                document.getElementById("confirm").disabled = true;
+            }
+            else {
+                document.getElementById("confirm").disabled = false;
+            }
             setAllTotalPrice();
         };
 
@@ -356,10 +363,13 @@
 
         function newItem() {
             globalItemCount++;
+            document.getElementById("confirm").disabled = true;
             $( ".total" ).append( '<div id='+globalItemCount+' class="loop"><div class="form-group"><button class="btn p-0" type="button" onclick=removeItem(this)><i class="fa fa-minus-circle"; style="color:red"></i></button><div class="row"><div class="col-8"><label for="exampleInputPassword1">Product<span class="text-danger">*</span></label><select class="form-control product" id="product'+ globalItemCount +'" onchange="populateUnitList(this.options[this.selectedIndex].value, '+globalItemCount+')"><option value="" disabled selected>Product Name</option></select></div><div class="col"><label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label><select class="form-control" id="unit'+ globalItemCount +'" onchange="setPrice(this.options[this.selectedIndex].value,'+globalItemCount+')"><option value="" disabled selected>No Data Avaiable</option></select></div></div></div><div class="form-group"><div class="row"><div class="col"><label for="exampleInputPassword1">Quantity<span class="text-danger">*</span></label><input class="form-control" type="" id="quantity'+ globalItemCount +'" onkeyup="calculateTotalPrice('+globalItemCount+')"></div><div class="col"><label for="exampleInputPassword1">Price<span class="text-danger">*</span></label><input class="form-control" type="" id="price'+ globalItemCount +'" disabled></div><div class="col-6"><label for="exampleInputPassword1">Total Price<span class="text-danger">*</span></label><input name="totalPrice "class="form-control total-price" type="" id="totalPrice'+ globalItemCount +'" disabled><hr /><div class="row"><div class="col"><p class="font-weight-bold">Total Nett Price<span class="text-danger">*</span></p></div><div class="col"><p class="text-right font-weight-bold" id="totalNettPrice'+ globalItemCount +'">0</p></div></div></div></div></div></div>' );
 
             populateProductList("product"+globalItemCount);
         }
+
+        
 
         populateProductList();
         populateDistributorName();
