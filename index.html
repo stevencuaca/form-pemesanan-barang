@@ -23,7 +23,7 @@
             display: none;
         }
         #showProducts {
-            //display: none;
+            display: none;
         }
     </style>
 </head>
@@ -145,7 +145,7 @@
                                     <p class="font-weight-bold">Total</p>
                                 </div>
                                 <div class="col">
-                                    <p class="font-weight-bold" id="globalTotal">0</p>
+                                    <p class="font-weight-bold" id="globalTotal"></p>
                                 </div>
                             </div>
                         </div>
@@ -297,9 +297,26 @@
 
             var totalPrice = document.getElementById(totalPriceHTMLID).value;
             var element = document.getElementById(totalNettPriceHTMLID);
+
             element.innerHTML = totalPrice;
+            setAllTotalPrice();
         };
 
+        function setAllTotalPrice() {
+            
+            let globalTotalToInt = parseInt(globalTotal);
+
+            for(let i = 0; i < globalItemCount; i++) {
+                x = document.getElementById("totalNettPrice"+(i+1)).innerHTML;
+                globalTotalToInt = parseInt(x) + globalTotalToInt;
+            }
+
+            document.getElementById("globalTotal").innerHTML = "";
+            if (isNaN(globalTotalToInt)) {
+                globalTotalToInt = 0;
+            }
+            document.getElementById("globalTotal").innerHTML = globalTotalToInt;
+        }
 
         function calculateTotalPrice(index=1) {
             var quantityHTMLID = "quantity"+index;
@@ -308,15 +325,38 @@
             var quantity  = document.getElementById(quantityHTMLID).value;
             var price = document.getElementById(priceHTMLID).value;
             var totalNettPrice = quantity*price;
-            document.getElementById(totalPriceHTMLID).value = totalNettPrice;
-            globalTotal = globalTotal + totalNettPrice;
-            document.getElementById("globalTotal").innerHTML = globalTotal;
+
+            document.getElementById(totalPriceHTMLID).value = totalNettPrice;    
+            
             setTotalNettPrice(index);
+        }
+
+        function removeItem(index) {
+            index = $(index).closest('div.loop').attr('id');
+            let globalTotalToInt = parseInt(globalTotal);
+
+            for(let i = 0; i < globalItemCount; i++) {
+                x = document.getElementById("totalNettPrice"+(i+1)).innerHTML;
+                globalTotalToInt = parseInt(x) + globalTotalToInt;
+            }
+
+            document.getElementById("globalTotal").innerHTML = "";
+            if (isNaN(globalTotalToInt)) {
+                globalTotalToInt = 0;
+            }
+
+            globalTotalToInt = globalTotalToInt - document.getElementById("totalPrice"+index).value;
+
+            console.log(globalTotal);
+            const myNode = document.getElementById(index);
+            myNode.innerHTML = '';
+            globalItemCount--;
+            setAllTotalPrice();
         }
 
         function newItem() {
             globalItemCount++;
-            $( ".total" ).append( '<div class="form-group"><div class="row"><div class="col-8"><label for="exampleInputPassword1">Product<span class="text-danger">*</span></label><select class="form-control product" id="product'+ globalItemCount +'" onchange="populateUnitList(this.options[this.selectedIndex].value, '+globalItemCount+')"><option value="" disabled selected>Product Name</option></select></div><div class="col"><label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label><select class="form-control" id="unit'+ globalItemCount +'" onchange="setPrice(this.options[this.selectedIndex].value,'+globalItemCount+')"><option value="" disabled selected>No Data Avaiable</option></select></div></div></div><div class="form-group"><div class="row"><div class="col"><label for="exampleInputPassword1">Quantity<span class="text-danger">*</span></label><input class="form-control" type="" id="quantity'+ globalItemCount +'" onkeyup="calculateTotalPrice('+globalItemCount+')"></div><div class="col"><label for="exampleInputPassword1">Price<span class="text-danger">*</span></label><input class="form-control" type="" id="price'+ globalItemCount +'" disabled></div><div class="col-6"><label for="exampleInputPassword1">Total Price<span class="text-danger">*</span></label><input class="form-control" type="" id="totalPrice'+ globalItemCount +'" disabled><hr /><div class="row"><div class="col"><p class="font-weight-bold">Total Nett Price<span class="text-danger">*</span></p></div><div class="col"><p class="text-right font-weight-bold" id="totalNettPrice'+ globalItemCount +'">0</p></div></div></div></div></div>' );
+            $( ".total" ).append( '<div id='+globalItemCount+' class="loop"><div class="form-group"><button class="btn p-0" type="button" onclick=removeItem(this)><i class="fa fa-minus-circle"; style="color:red"></i></button><div class="row"><div class="col-8"><label for="exampleInputPassword1">Product<span class="text-danger">*</span></label><select class="form-control product" id="product'+ globalItemCount +'" onchange="populateUnitList(this.options[this.selectedIndex].value, '+globalItemCount+')"><option value="" disabled selected>Product Name</option></select></div><div class="col"><label for="exampleInputPassword1">Unit<span class="text-danger">*</span></label><select class="form-control" id="unit'+ globalItemCount +'" onchange="setPrice(this.options[this.selectedIndex].value,'+globalItemCount+')"><option value="" disabled selected>No Data Avaiable</option></select></div></div></div><div class="form-group"><div class="row"><div class="col"><label for="exampleInputPassword1">Quantity<span class="text-danger">*</span></label><input class="form-control" type="" id="quantity'+ globalItemCount +'" onkeyup="calculateTotalPrice('+globalItemCount+')"></div><div class="col"><label for="exampleInputPassword1">Price<span class="text-danger">*</span></label><input class="form-control" type="" id="price'+ globalItemCount +'" disabled></div><div class="col-6"><label for="exampleInputPassword1">Total Price<span class="text-danger">*</span></label><input name="totalPrice "class="form-control total-price" type="" id="totalPrice'+ globalItemCount +'" disabled><hr /><div class="row"><div class="col"><p class="font-weight-bold">Total Nett Price<span class="text-danger">*</span></p></div><div class="col"><p class="text-right font-weight-bold" id="totalNettPrice'+ globalItemCount +'">0</p></div></div></div></div></div></div>' );
 
             populateProductList("product"+globalItemCount);
         }
